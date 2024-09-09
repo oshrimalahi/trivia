@@ -3,7 +3,6 @@
 #include <fstream>
 #include <iomanip>
 #include <sstream>
-#include <cmath>
 
 
 using std::string;
@@ -17,10 +16,9 @@ int Helper::getMessageTypeCode(const SOCKET sc)
 	if (msg == "")
 		return 0;
 
-	int res = (int)msg[0];
+	int res = std::atoi(msg.c_str());
 	return  res;
 }
-
 
 void Helper::send_update_message_to_client(const SOCKET sc, const string& file_content, const string& second_username, const string &all_users)
 {
@@ -38,14 +36,7 @@ void Helper::send_update_message_to_client(const SOCKET sc, const string& file_c
 // returns the data as int
 int Helper::getIntPartFromSocket(const SOCKET sc, const int bytesNum)
 {
-	std::string msg = getPartFromSocket(sc, bytesNum, 0).c_str();
-	int num = 0;
-	for (int i = 0; i < bytesNum; i++)
-	{
-		num += msg[bytesNum - i - 1] * pow(256, i);
-	}
-	return num;
-	//return atoi(getPartFromSocket(sc, bytesNum, 0).c_str());
+	return atoi(getPartFromSocket(sc, bytesNum, 0).c_str());
 }
 
 // recieve data from socket according byteSize
@@ -61,7 +52,6 @@ string Helper::getPaddedNumber(const int num, const int digits)
 	std::ostringstream ostr;
 	ostr << std::setw(digits) << std::setfill('0') << num;
 	return ostr.str();
-
 }
 
 // recieve data from socket according byteSize

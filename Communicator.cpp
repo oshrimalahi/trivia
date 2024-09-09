@@ -74,7 +74,7 @@ void Communicator::handleNewClient()
 
 	TRACE("Client accepted !");
 	// create new thread for client	and detach from it
-	IRequestHandler* handler = _factory.createLoginRequestHandler();
+	LoginRequestHandler* handler = new LoginRequestHandler();
 	_clients[client_socket] = handler;
 	std::thread tr(&Communicator::clientHandler, this, client_socket);
 	tr.detach();
@@ -91,9 +91,7 @@ void Communicator::clientHandler(const SOCKET client_socket)
             IRequestHandler* handler = _clients[client_socket];
             if (handler->isRequestRelevant(requestInfo))
             {
-                RequestResult response = handler->handleRequest(requestInfo);
-				delete  _clients[client_socket];
-				_clients[client_socket] = response.newHandler;
+				RequestResult response = handler->handleRequest(requestInfo);
                 Helper::sendData(client_socket, std::string(response.response.begin(), response.response.end()));
             }
             else
@@ -116,31 +114,19 @@ RequestInfo Communicator::createRequestInfo(const SOCKET client_socket)
 {
     RequestInfo requestInfo;
 
-
-    requestInfo.id = Helper::getMessageTypeCode(client_socket);
-	std::cout << "id: " << requestInfo.id << std::endl;
-
+    requestInfo.id = client_socket;
 
     requestInfo.receivalTime = std::time(nullptr);
-	std::cout << "receivalTime: " << requestInfo.receivalTime << std::endl;
 
-	std::time_t t = std::time(nullptr);
-	std::cout << "t: " << t << std::endl;
-
-
-    //int messageSize = Helper::getIntPartFromSocket(client_socket, 4);
-	int messageSize = Helper::getMessageTypeCode(client_socket) * 256 * 256 * 256;
-	messageSize += Helper::getMessageTypeCode(client_socket) * 256 * 256;
-	messageSize += Helper::getMessageTypeCode(client_socket) * 256;
-	messageSize += Helper::getMessageTypeCode(client_socket);
-	std::string content = "";
-	for (int i = 0; i < messageSize; i++)
+    int messageType = Helper::getMessageTypeCode(client_socket);
+    requestInfo.buffer.push_back(static_cast<Byte>(messageType));
+    int messageSize = Helper::getIntPartFromSocket(client_socket, 4);
+	for (int i = 0; i < 4; i++)
 	{
-		char c[1];
-		recv(client_socket, c, 1, 0);
-		content += c[0];
-	}
-    requestInfo.buffer.insert(requestInfo.buffer.end(), content.begin(), content.end());
+		requestInfo.buffer.push_back((messageSize >> (8 * (3 - i))) & 0xFF);
+		std::string content = Helper::getStringPartFromSocket(client_socket, messageSize);
+		requestInfo.buffer.insert(requestInfo.buffer.end(), content.begin(), content.end());
 
-    return requestInfo;
+		return requestInfo;
+	}
 }

@@ -1,0 +1,4 @@
+﻿  Communicator.cpp
+C:\Users\oshri\Desktop\‏‏1.0.2\Our_Trivia\Communicator.cpp(117,22): warning C4244: '=': conversion from 'const SOCKET' to 'int', possible loss of data
+C:\Users\oshri\Desktop\‏‏1.0.2\Our_Trivia\Communicator.cpp(132,1): warning C4715: 'Communicator::createRequestInfo': not all control paths return a value
+  trivia.vcxproj -> C:\Users\oshri\Desktop\‏‏1.0.2\Our_Trivia\x64\Debug\trivia.exe

@@ -4518,8 +4518,7 @@ class parse_error : public exception
 };
 
 /// @brief exception indicating errors with iterators
-/// @sa https://json.nlohmann.me/api/basic_json/
-/// _iterator/
+/// @sa https://json.nlohmann.me/api/basic_json/invalid_iterator/
 class invalid_iterator : public exception
 {
   public:

@@ -6,9 +6,6 @@
 #include <condition_variable>
 #include <WinSock2.h>
 #include "RecvMessage.h"
-#include "JsonRequestPacketDeserializer.h"
-#include "JsonResponsePacketSerializer.h"
-#include "RequestHandlerFactory.h"
 #include "IRequestHandler.h"
 
 class Communicator
@@ -29,5 +26,4 @@ private:
     std::queue<RecvMessage*> _messageHandler;
     std::mutex _mtxReceivedMessages;
     std::condition_variable _msgQueueCondition;
-    RequestHandlerFactory _factory;
 };

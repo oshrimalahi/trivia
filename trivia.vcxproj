@@ -20,7 +20,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
-    <ProjectGuid>{4A2CEA33-FD4A-48F0-9A2A-F72C80B1565E}</ProjectGuid>
+    <ProjectGuid>{8A70A337-5A06-4F42-A3CA-265148DF1AB5}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -121,38 +121,18 @@
   <ItemGroup>
     <ClCompile Include="Communicator.cpp" />
     <ClCompile Include="Helper.cpp" />
-    <ClCompile Include="JsonRequestPacketDeserializer.cpp" />
-    <ClCompile Include="JsonResponsePacketSerializer.cpp" />
-    <ClCompile Include="LoggedUser.cpp" />
-    <ClCompile Include="LoginManager.cpp" />
-    <ClCompile Include="LoginRequestHandler.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MenuRequestHandler.cpp" />
-    <ClCompile Include="RequestHandlerFactory.cpp" />
     <ClCompile Include="Server.cpp" />
-    <ClCompile Include="sqlite3.c" />
-    <ClCompile Include="SqliteDatabase.cpp" />
     <ClCompile Include="WSAInitializer.cpp" />
+    <ClCompile Include="‏‏IRequestHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Communicator.h" />
     <ClInclude Include="Helper.h" />
-    <ClInclude Include="IDatabase.h" />
     <ClInclude Include="IRequestHandler.h" />
     <ClInclude Include="json.hpp" />
-    <ClInclude Include="JsonRequestPacketDeserializer.h" />
-    <ClInclude Include="JsonResponsePacketSerializer.h" />
-    <ClInclude Include="LoggedUser.h" />
-    <ClInclude Include="LoginManager.h" />
-    <ClInclude Include="LoginRequestHandler.h" />
-    <ClInclude Include="MenuRequestHandler.h" />
     <ClInclude Include="RecvMessage.h" />
-    <ClInclude Include="RequestHandlerFactory.h" />
     <ClInclude Include="Server.h" />
-    <ClInclude Include="sqlite3.h" />
-    <ClInclude Include="SqliteDatabase.h" />
-    <ClInclude Include="strucrtRequest.h" />
-    <ClInclude Include="structsResponse.h" />
     <ClInclude Include="WSAInitializer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
