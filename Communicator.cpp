@@ -2,6 +2,7 @@
 #include <exception>
 #include <iostream>
 #include <string>
+#include <numeric>
 #include "Helper.h"
 
 // using static const instead of macros 
@@ -26,6 +27,7 @@ Communicator::Communicator()
 Communicator::~Communicator()
 {
 	TRACE(__FUNCTION__ " closing accepting socket");
+	// why is this try necessarily ?
 	try
 	{
 		// the only use of the destructor should be for freeing 
@@ -74,7 +76,7 @@ void Communicator::handleNewClient()
 
 	TRACE("Client accepted !");
 	// create new thread for client	and detach from it
-	IRequestHandler* handler = _factory.createLoginRequestHandler();
+	LoginRequestHandler* handler = new LoginRequestHandler();
 	_clients[client_socket] = handler;
 	std::thread tr(&Communicator::clientHandler, this, client_socket);
 	tr.detach();
@@ -82,65 +84,18 @@ void Communicator::handleNewClient()
 
 void Communicator::clientHandler(const SOCKET client_socket)
 {
-    try
-    {
-        while (true)
-        {
-            RequestInfo requestInfo = createRequestInfo(client_socket);
+	RecvMessage* currRcvMsg = nullptr;
+	try
+	{	
+		std::string msg = "Hello";
+		Helper::sendData(client_socket, msg);
+		std::string recv = Helper::getPartFromSocket(client_socket, 5, 0);
+		std::cout << recv << std::endl;
 
-            IRequestHandler* handler = _clients[client_socket];
-            if (handler->isRequestRelevant(requestInfo))
-            {
-                RequestResult response = handler->handleRequest(requestInfo);
-				delete  _clients[client_socket];
-				_clients[client_socket] = response.newHandler;
-                Helper::sendData(client_socket, std::string(response.response.begin(), response.response.end()));
-            }
-            else
-            {
-                // Handle irrelevant request
-                ErrorResponse errorResponse{ "Invalid request" };
-                Buffer response = JsonResponsePacketSerializer::serializeResponse(errorResponse);
-                Helper::sendData(client_socket, std::string(response.begin(), response.end()));
-            }
-        }
-    }
-    catch (const std::exception& e)
-    {
-        std::cout << "Exception was caught in function clientHandler. socket=" << client_socket << ", what=" << e.what() << std::endl;
-    }
-    closesocket(client_socket);
-}
-
-RequestInfo Communicator::createRequestInfo(const SOCKET client_socket)
-{
-    RequestInfo requestInfo;
-
-
-    requestInfo.id = Helper::getMessageTypeCode(client_socket);
-	std::cout << "id: " << requestInfo.id << std::endl;
-
-
-    requestInfo.receivalTime = std::time(nullptr);
-	std::cout << "receivalTime: " << requestInfo.receivalTime << std::endl;
-
-	std::time_t t = std::time(nullptr);
-	std::cout << "t: " << t << std::endl;
-
-
-    //int messageSize = Helper::getIntPartFromSocket(client_socket, 4);
-	int messageSize = Helper::getMessageTypeCode(client_socket) * 256 * 256 * 256;
-	messageSize += Helper::getMessageTypeCode(client_socket) * 256 * 256;
-	messageSize += Helper::getMessageTypeCode(client_socket) * 256;
-	messageSize += Helper::getMessageTypeCode(client_socket);
-	std::string content = "";
-	for (int i = 0; i < messageSize; i++)
-	{
-		char c[1];
-		recv(client_socket, c, 1, 0);
-		content += c[0];
 	}
-    requestInfo.buffer.insert(requestInfo.buffer.end(), content.begin(), content.end());
-
-    return requestInfo;
+	catch (const std::exception& e)
+	{
+		std::cout << "Exception was catch in function clientHandler. socket=" << client_socket << ", what=" << e.what() << std::endl;
+	}
+	closesocket(client_socket);
 }

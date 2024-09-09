@@ -3,7 +3,6 @@
 #include <fstream>
 #include <iomanip>
 #include <sstream>
-#include <cmath>
 
 
 using std::string;
@@ -12,12 +11,12 @@ using std::string;
 // and returns the code. if no message found in the socket returns 0 (which means the client disconnected)
 int Helper::getMessageTypeCode(const SOCKET sc)
 {
-	std::string msg = getPartFromSocket(sc, 1, 0);
+	std::string msg = getPartFromSocket(sc, 3, 0);
 
 	if (msg == "")
 		return 0;
 
-	int res = (int)msg[0];
+	int res = std::atoi(msg.c_str());
 	return  res;
 }
 
@@ -38,14 +37,7 @@ void Helper::send_update_message_to_client(const SOCKET sc, const string& file_c
 // returns the data as int
 int Helper::getIntPartFromSocket(const SOCKET sc, const int bytesNum)
 {
-	std::string msg = getPartFromSocket(sc, bytesNum, 0).c_str();
-	int num = 0;
-	for (int i = 0; i < bytesNum; i++)
-	{
-		num += msg[bytesNum - i - 1] * pow(256, i);
-	}
-	return num;
-	//return atoi(getPartFromSocket(sc, bytesNum, 0).c_str());
+	return atoi(getPartFromSocket(sc, bytesNum, 0).c_str());
 }
 
 // recieve data from socket according byteSize
