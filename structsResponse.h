@@ -1,5 +1,4 @@
 #pragma once
-#include "Room.h"
 
 #include <vector>
 
@@ -20,15 +19,12 @@ struct GetRoomsResponse
 {
 public:
 	unsigned int status;
-	std::vector<RoomData> rooms;
-
 };
 
 struct GetPlayersInRoomResponse
 {
 public:
 	std::vector<std::string> players;
-
 };
 
 struct getHighScoreResponse
