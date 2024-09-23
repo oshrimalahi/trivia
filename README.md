@@ -1,2 +1,2 @@
-# Our_Trivia
+# trivia
 A multiplayer online trivia game.
